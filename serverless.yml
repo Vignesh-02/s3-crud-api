@@ -45,18 +45,18 @@ functions:
         Action:
           - 's3:Get*'
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-    # s3FileDelete:
-    # handler: src/delete.handler
-    # name: vigu-s3-file-delete
-    # events:
-    #   - http:
-    #       path: file/{fileKey}
-    #       method: DELETE
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - 's3:DeleteObject'
-    #     Resource: arn:s3:::${self:custom.fileUploadBucketName}/*
+  s3FileDelete:
+    handler: src/delete.handler
+    name: vigu-s3-file-delete
+    events:
+      - http:
+          path: file/{fileKey}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - 's3:DeleteObject'
+        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
 
 # the /* is to match any nested directories
 # The * means that the lambda function has access to any nested folder of the s3 buckets
