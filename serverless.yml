@@ -1,0 +1,90 @@
+service: vigu-s3-crud-api
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: dev
+  region: us-east-1
+  apiName: ${self.service}
+  memorySize: 128 #mb
+  timeout: 30 #sec
+  environment: 
+   FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName} 
+
+custom:
+  fileUploadBucketName: ${self:service}-viguito-${self:provider.stage}
+
+# This plugin is the one you installed as a npm package.
+plugins:
+  - serverless-iam-roles-per-function
+
+# update isn't required as posting again to the same endpoint with the same name updates it 
+# event trigger is the api gateway trigger
+functions:
+  s3FileUploader:
+    handler: src/upload.handler
+    name: vigu-s3-file-upload
+    description: This is a lambda handler which uploads a file to an S3 bucket based on an API Gateway trigger
+    timeout: 60 #seconds
+    memorySize: 128 #mb 
+    events:
+      - http:
+          path: file
+          method: POST
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - 's3:Put*'
+        Resource: arn:s3:::${self:custom.fileUploadBucketName}/*
+
+  s3FileGet:
+    handler: src/get.handler
+    name: vigu-s3-file-get
+    description: This is a lambda handler which uploads a file to an S3 bucket based on an API Gateway trigger
+    timeout: 60 #seconds
+    memorySize: 128 #mb 
+    events:
+      - http:
+          path: file/{fileKey}
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - 's3:Get*'
+        Resource: arn:s3:::${self:custom.fileUploadBucketName}/*
+    
+    s3FileDelete:
+    handler: src/delete.handler
+    name: vigu-s3-file-delete
+    description: This is a lambda handler which uploads a file to an S3 bucket based on an API Gateway trigger
+    timeout: 60 #seconds
+    memorySize: 128 #mb 
+    events:
+      - http:
+          path: file/{fileKey}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - 's3:DeleteObject'
+        Resource: arn:s3:::${self:custom.fileUploadBucketName}/*
+
+# the /* is to match any nested directories
+# The * means that the lambda function has access to any nested folder of the s3 buckets
+# arn is amazon resource name
+#  lambda function cannot read or delete s3 bucket
+
+
+resources: 
+  Resources:
+    FileBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.fileUploadBucketName}
+        AccessControl: Private
+
+
+# made changes to bucket name
+# installed plugin via command line
+# tried uninstalling and installing serverless-iam-roles-per-function
+#  removed plugin serverless-iam-roles-per-function and testing
