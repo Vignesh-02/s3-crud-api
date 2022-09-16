@@ -24,8 +24,6 @@ functions:
   s3FileUploader:
     handler: src/upload.handler
     name: vigu-s3-file-upload
-    timeout: 60 #seconds
-    memorySize: 128 #mb 
     events:
       - http:
           path: file
@@ -39,8 +37,6 @@ functions:
   s3FileGet:
     handler: src/get.handler
     name: vigu-s3-file-get
-    timeout: 60 #seconds
-    memorySize: 128 #mb 
     events:
       - http:
           path: file/{fileKey}
@@ -54,8 +50,6 @@ functions:
     s3FileDelete:
     handler: src/delete.handler
     name: vigu-s3-file-delete
-    timeout: 60 #seconds
-    memorySize: 128 #mb 
     events:
       - http:
           path: file/{fileKey}
