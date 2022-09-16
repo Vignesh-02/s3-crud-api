@@ -24,7 +24,6 @@ functions:
   s3FileUploader:
     handler: src/upload.handler
     name: vigu-s3-file-upload
-    description: This is a lambda handler which uploads a file to an S3 bucket based on an API Gateway trigger
     timeout: 60 #seconds
     memorySize: 128 #mb 
     events:
@@ -40,7 +39,6 @@ functions:
   s3FileGet:
     handler: src/get.handler
     name: vigu-s3-file-get
-    description: This is a lambda handler which uploads a file to an S3 bucket based on an API Gateway trigger
     timeout: 60 #seconds
     memorySize: 128 #mb 
     events:
@@ -56,7 +54,6 @@ functions:
     s3FileDelete:
     handler: src/delete.handler
     name: vigu-s3-file-delete
-    description: This is a lambda handler which uploads a file to an S3 bucket based on an API Gateway trigger
     timeout: 60 #seconds
     memorySize: 128 #mb 
     events:
