@@ -32,7 +32,7 @@ functions:
       - Effect: Allow
         Action:
           - 's3:Put*'
-        Resource: arn:s3:::${self:custom.fileUploadBucketName}/*
+        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
   s3FileGet:
     handler: src/get.handler
     name: vigu-s3-file-get
@@ -44,7 +44,7 @@ functions:
       - Effect: Allow
         Action:
           - 's3:Get*'
-        Resource: arn:s3:::${self:custom.fileUploadBucketName}/*
+        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
     # s3FileDelete:
     # handler: src/delete.handler
     # name: vigu-s3-file-delete
