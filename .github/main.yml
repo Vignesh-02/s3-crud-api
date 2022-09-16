@@ -1,4 +1,4 @@
-name: Deploy s3 file upload
+name: S3 CRUD API 
 
 on:
   push:
