@@ -1,4 +1,4 @@
-service: vigu-s3-crud-api
+service: viguito-s3-crud-api
 
 provider:
   name: aws
@@ -12,7 +12,7 @@ provider:
    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName} 
 
 custom:
-  fileUploadBucketName: ${self:service}-viguito-${self:provider.stage}
+  fileUploadBucketName: ${self:service}-viguito-chya--${self:provider.stage}
 
 # This plugin is the one you installed as a npm package.
 plugins:
@@ -23,7 +23,7 @@ plugins:
 functions:
   s3FileUploader:
     handler: src/upload.handler
-    name: vigu-s3-file-upload
+    name: viguito-s3-file-upload
     events:
       - http:
           path: file
@@ -35,7 +35,7 @@ functions:
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
   s3FileGet:
     handler: src/get.handler
-    name: vigu-s3-file-get
+    name: viguito-s3-file-get
     events:
       - http:
           path: file/{fileKey}
@@ -47,7 +47,7 @@ functions:
         Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
   s3FileDelete:
     handler: src/delete.handler
-    name: vigu-s3-file-delete
+    name: viguito-s3-file-delete
     events:
       - http:
           path: file/{fileKey}
