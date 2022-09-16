@@ -5,7 +5,7 @@ provider:
   runtime: nodejs16.x
   stage: dev
   region: us-east-1
-  apiName: ${self.service}
+  apiName: ${self:service}
   memorySize: 128 #mb
   timeout: 30 #sec
   environment: 
