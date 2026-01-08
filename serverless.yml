@@ -27,7 +27,7 @@ functions:
     name: viguito-s3-file-upload
     events:
       - httpApi:
-          path: file
+          path: /file
           method: POST
     iamRoleStatements:
       - Effect: Allow
@@ -39,7 +39,7 @@ functions:
     name: viguito-s3-file-get
     events:
       - httpApi:
-          path: file/{fileKey}
+          path: /file/{fileKey}
           method: GET
     iamRoleStatements:
       - Effect: Allow
@@ -51,7 +51,7 @@ functions:
     name: viguito-s3-file-delete
     events:
       - httpApi:
-          path: file/{fileKey}
+          path: /file/{fileKey}
           method: DELETE
     iamRoleStatements:
       - Effect: Allow
