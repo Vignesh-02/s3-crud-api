@@ -2,7 +2,7 @@ service: viguito-s3-crud-api
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs20.x
   stage: dev
   region: us-east-1
   apiName: ${self:service}
@@ -10,9 +10,10 @@ provider:
   timeout: 30 #sec
   environment: 
    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName} 
-
+  httpApi:
+    cors: true
 custom:
-  fileUploadBucketName: ${self:service}-viguito-chya--${self:provider.stage}
+  fileUploadBucketName: ${self:service}-vigu-${self:provider.stage}
 
 # This plugin is the one you installed as a npm package.
 plugins:
@@ -25,7 +26,7 @@ functions:
     handler: src/upload.handler
     name: viguito-s3-file-upload
     events:
-      - http:
+      - httpApi:
           path: file
           method: POST
     iamRoleStatements:
@@ -37,7 +38,7 @@ functions:
     handler: src/get.handler
     name: viguito-s3-file-get
     events:
-      - http:
+      - httpApi:
           path: file/{fileKey}
           method: GET
     iamRoleStatements:
@@ -49,7 +50,7 @@ functions:
     handler: src/delete.handler
     name: viguito-s3-file-delete
     events:
-      - http:
+      - httpApi:
           path: file/{fileKey}
           method: DELETE
     iamRoleStatements:
@@ -71,7 +72,11 @@ resources:
       Properties:
         BucketName: ${self:custom.fileUploadBucketName}
         AccessControl: Private
-
+        # PublicAccessBlockConfiguration:
+        #   BlockPublicAcls: true
+        #   BlockPublicPolicy: true
+        #   IgnorePublicAcls: true
+        #   RestrictPublicBuckets: true
 
 # made changes to bucket name
 # installed plugin via command line
