@@ -82,3 +82,5 @@ resources:
 # installed plugin via command line
 # tried uninstalling and installing serverless-iam-roles-per-function
 #  removed plugin serverless-iam-roles-per-function and testing
+
+# redeploy after adding cloudwatchlog rule 
