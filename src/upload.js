@@ -16,6 +16,7 @@ module.exports.handler = async(event) => {
     try{
         const parsedBody = JSON.parse(event.body);
         const base64 = parsedBody.file;
+        console.log('base64 version', base64)
         const decodedFile = Buffer.from(base64.replace(/^data:image\/\w+;base64/,""),"base64");
         const params = {
             Bucket: BUCKET_NAME,

@@ -12,6 +12,9 @@ provider:
    FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName} 
   httpApi:
     cors: true
+    provider:
+    payload: '2.0'
+
 custom:
   fileUploadBucketName: ${self:service}-vigu-${self:provider.stage}
 
