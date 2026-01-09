@@ -49,6 +49,8 @@ module.exports.handler = async (event) => {
   try {
     const key = decodeURIComponent(event.pathParameters.fileKey);
 
+    console.log('image key', key)
+
     const data = await s3
       .getObject({
         Bucket: BUCKET_NAME,
@@ -56,6 +58,9 @@ module.exports.handler = async (event) => {
       })
       .promise();
 
+    console.log('image data', data)
+
+    
     return {
       statusCode: 200,
       isBase64Encoded: true, // ✅ REQUIRED
