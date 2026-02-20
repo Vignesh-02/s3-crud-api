@@ -3,6 +3,46 @@ const s3 = new AWS.S3();
 
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 
+
+
+module.exports.handler = async (event) => {
+  try {
+    const key = decodeURIComponent(event.pathParameters.fileKey);
+
+    console.log('image key', key)
+
+    const data = await s3
+      .getObject({
+        Bucket: BUCKET_NAME,
+        Key: key,
+      })
+      .promise();
+
+    console.log('image data', data)
+
+
+    return {
+      statusCode: 200,
+      isBase64Encoded: true, // ✅ REQUIRED
+      headers: {
+        "Content-Type": data.ContentType || "application/octet-stream",
+        "Cache-Control": "public, max-age=3600",
+      },
+      body: data.Body.toString("base64"), // ✅ RAW IMAGE DATA
+    };
+  } catch (err) {
+    console.error(err);
+
+    return {
+      statusCode: 404,
+      body: JSON.stringify({
+        message: "failed to retrieve file from S3",
+        errorMessage: err.message,
+      }),
+    };
+  }
+};
+
 // module.exports.handler = async(event) => {
 //     console.log(event);
 
@@ -44,41 +84,3 @@ const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 // const s3 = new AWS.S3();
 
 // const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
-
-module.exports.handler = async (event) => {
-  try {
-    const key = decodeURIComponent(event.pathParameters.fileKey);
-
-    console.log('image key', key)
-
-    const data = await s3
-      .getObject({
-        Bucket: BUCKET_NAME,
-        Key: key,
-      })
-      .promise();
-
-    console.log('image data', data)
-
-
-    return {
-      statusCode: 200,
-      isBase64Encoded: true, // ✅ REQUIRED
-      headers: {
-        "Content-Type": data.ContentType || "application/octet-stream",
-        "Cache-Control": "public, max-age=3600",
-      },
-      body: data.Body.toString("base64"), // ✅ RAW IMAGE DATA
-    };
-  } catch (err) {
-    console.error(err);
-
-    return {
-      statusCode: 404,
-      body: JSON.stringify({
-        message: "failed to retrieve file from S3",
-        errorMessage: err.message,
-      }),
-    };
-  }
-};

@@ -1,94 +1,92 @@
 service: viguito-s3-crud-api
 
 provider:
-  name: aws
-  runtime: nodejs20.x
-  stage: dev
-  region: us-east-1
-  apiName: ${self:service}
-  memorySize: 128 #mb
-  timeout: 30 #sec
-  environment: 
-   FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName} 
-  httpApi:
-    cors: true
-    provider:
-    payload: '2.0'
+    name: aws
+    runtime: nodejs20.x
+    stage: dev
+    region: us-east-1
+    apiName: ${self:service}
+    memorySize: 128 #mb
+    timeout: 30 #sec
+    environment:
+        FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+    httpApi:
+        cors: true
+        provider:
+        payload: "2.0"
 
 custom:
-  fileUploadBucketName: ${self:service}-vigu-${self:provider.stage}
+    fileUploadBucketName: ${self:service}-vigu-${self:provider.stage}
 
 # This plugin is the one you installed as a npm package.
 plugins:
-  - serverless-iam-roles-per-function
+    - serverless-iam-roles-per-function
 
-# update isn't required as posting again to the same endpoint with the same name updates it 
+# update isn't required as posting again to the same endpoint with the same name updates it
 # event trigger is the api gateway trigger
 functions:
-  s3FileUploader:
-    handler: src/upload.handler
-    name: viguito-s3-file-upload
-    events:
-      - httpApi:
-          path: /file
-          method: POST
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - 's3:PutObject'
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-  s3FileGet:
-    handler: src/get.handler
-    name: viguito-s3-file-get
-    events:
-      - httpApi:
-          path: /file/{fileKey}
-          method: GET
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - 's3:GetObject'
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
-        # Bucket-level access
-      - Effect: Allow
-        Action:
-          - s3:ListBucket
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}
-  s3FileDelete:
-    handler: src/delete.handler
-    name: viguito-s3-file-delete
-    events:
-      - httpApi:
-          path: /file/{fileKey}
-          method: DELETE
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - 's3:DeleteObject'
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    s3FileUploader:
+        handler: src/upload.handler
+        name: viguito-s3-file-upload
+        events:
+            - httpApi:
+                  path: /file
+                  method: POST
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - "s3:PutObject"
+              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+    s3FileGet:
+        handler: src/get.handler
+        name: viguito-s3-file-get
+        events:
+            - httpApi:
+                  path: /file/{fileKey}
+                  method: GET
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - "s3:GetObject"
+              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+              # Bucket-level access
+            - Effect: Allow
+              Action:
+                  - "s3:ListBucket"
+              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}
+    s3FileDelete:
+        handler: src/delete.handler
+        name: viguito-s3-file-delete
+        events:
+            - httpApi:
+                  path: /file/{fileKey}
+                  method: DELETE
+        iamRoleStatements:
+            - Effect: Allow
+              Action:
+                  - "s3:DeleteObject"
+              Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
 
 # the /* is to match any nested directories
 # The * means that the lambda function has access to any nested folder of the s3 buckets
 # arn is amazon resource name
 #  lambda function cannot read or delete s3 bucket
 
-
-resources: 
-  Resources:
-    FileBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.fileUploadBucketName}
-        AccessControl: Private
-        # PublicAccessBlockConfiguration:
-        #   BlockPublicAcls: true
-        #   BlockPublicPolicy: true
-        #   IgnorePublicAcls: true
-        #   RestrictPublicBuckets: true
-
+resources:
+    Resources:
+        FileBucket:
+            Type: AWS::S3::Bucket
+            Properties:
+                BucketName: ${self:custom.fileUploadBucketName}
+                AccessControl: Private
+                # PublicAccessBlockConfiguration:
+                #   BlockPublicAcls: true
+                #   BlockPublicPolicy: true
+                #   IgnorePublicAcls: true
+                #   RestrictPublicBuckets: true
 # made changes to bucket name
 # installed plugin via command line
 # tried uninstalling and installing serverless-iam-roles-per-function
 #  removed plugin serverless-iam-roles-per-function and testing
 
-# redeploy after adding cloudwatchlog rule 
+# redeploy after adding cloudwatchlog rule
